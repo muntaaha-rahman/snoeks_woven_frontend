@@ -68,34 +68,55 @@ export function VisitFormPage() {
 
   return (
     <div className="page">
-      <h1>{isEdit ? "Edit measurement" : "New measurement"}</h1>
+      <h1 style={{ marginTop: 24 }}>{isEdit ? "Edit measurement" : "New measurement"}</h1>
 
-      <section className="customer-form">
-        <TextField label="Customer name" value={visit.customer_name} onChange={(v) => set("customer_name", v)} />
-        <TextField label="Address" value={visit.address} onChange={(v) => set("address", v)} />
-        <TextField label="Postal code" value={visit.postal_code} onChange={(v) => set("postal_code", v)} />
-        <TextField label="City" value={visit.city} onChange={(v) => set("city", v)} />
-        <TextField label="Phone" value={visit.phone} onChange={(v) => set("phone", v)} />
-        <TextField label="Email" value={visit.email} onChange={(v) => set("email", v)} />
-        <label className="field">
-          <span>Date</span>
-          <input type="date" value={visit.visit_date} onChange={(e) => set("visit_date", e.target.value)} />
-        </label>
-        <TextField label="Surveyor" value={visit.surveyor_name} onChange={(v) => set("surveyor_name", v)} />
-        <TextField label="Property notes" value={visit.property_notes} onChange={(v) => set("property_notes", v)} />
-      </section>
+      <div className="section">
+        <div className="ruler small" />
+        <div className="section-inner">
+          <h2 className="section-title">Customer details</h2>
+          <div className="customer-form">
+            <TextField label="Customer name" value={visit.customer_name} onChange={(v) => set("customer_name", v)} />
+            <TextField label="Address" value={visit.address} onChange={(v) => set("address", v)} />
+            <TextField label="Postal code" value={visit.postal_code} onChange={(v) => set("postal_code", v)} />
+            <TextField label="City" value={visit.city} onChange={(v) => set("city", v)} />
+            <TextField label="Phone" value={visit.phone} onChange={(v) => set("phone", v)} />
+            <TextField label="Email" value={visit.email} onChange={(v) => set("email", v)} />
+            <label className="field">
+              <span>Date</span>
+              <input type="date" value={visit.visit_date} onChange={(e) => set("visit_date", e.target.value)} />
+            </label>
+            <TextField label="Surveyor" value={visit.surveyor_name} onChange={(v) => set("surveyor_name", v)} />
+            <TextField label="Property notes" value={visit.property_notes} onChange={(v) => set("property_notes", v)} />
+          </div>
+        </div>
+      </div>
 
-      {visit.rooms.map((room, i) => (
-        <RoomEditor key={i} room={room} onChange={(r) => replaceRoom(i, r)} onRemove={() => removeRoom(i)} />
-      ))}
-
-      <button type="button" onClick={addRoom} className="add-room-button">+ Add room</button>
+      <div className="section">
+        <div className="ruler small" />
+        <div className="section-inner">
+          <h2 className="section-title">
+            Rooms
+            <button type="button" className="ghost-button" onClick={addRoom}>+ Add room</button>
+          </h2>
+          {visit.rooms.length === 0 && (
+            <p style={{ color: "var(--text-muted)", fontSize: 14 }}>
+              No rooms added yet. Click "+ Add room" above to begin, e.g. "Living room" or "Bedroom 1".
+            </p>
+          )}
+          {visit.rooms.map((room, i) => (
+            <RoomEditor key={i} room={room} onChange={(r) => replaceRoom(i, r)} onRemove={() => removeRoom(i)} />
+          ))}
+        </div>
+      </div>
 
       {error && <p className="error-text">{error}</p>}
 
       <div className="form-actions">
+        <button type="button" className="ghost-button" onClick={() => navigate(-1)} disabled={saving}>
+          Cancel
+        </button>
         <button type="button" className="primary-button" onClick={handleSubmit} disabled={saving}>
-          {saving ? "Saving..." : "Save & send report"}
+          {saving ? "Saving..." : "Save, generate PDF & send email"}
         </button>
       </div>
     </div>

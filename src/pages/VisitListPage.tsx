@@ -33,11 +33,6 @@ export function VisitListPage() {
 
   return (
     <div className="page">
-      <div className="page-header">
-        <h1>Measurements</h1>
-        <Link to="/visits/new" className="primary-button">+ New measurement</Link>
-      </div>
-
       {!online && (
         <div className="banner banner-warning">
           You're offline. New measurements will be saved on this device and sent once you're back online.
@@ -61,6 +56,7 @@ export function VisitListPage() {
           placeholder="Search customer, address, city..."
           value={filters.search ?? ""}
           onChange={(e) => setFilters({ ...filters, search: e.target.value })}
+          style={{ flex: 2, minWidth: 220 }}
         />
         <input
           placeholder="City"
@@ -83,40 +79,43 @@ export function VisitListPage() {
           onChange={(e) => setFilters({ ...filters, date_to: e.target.value })}
         />
         <button type="submit">Filter</button>
+        <Link to="/visits/new" className="primary-button">+ New measurement</Link>
       </form>
+
+      <p className="datateam">This overview is shared with the whole Snoeks Wonen team.</p>
 
       {loading && <p>Loading...</p>}
       {error && <p className="error-text">{error}</p>}
 
-      <table className="visit-table">
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Customer</th>
-            <th>Address</th>
-            <th>City</th>
-            <th>Surveyor</th>
-            <th>Email</th>
-          </tr>
-        </thead>
-        <tbody>
-          {visits.map((v) => (
-            <tr key={v.id}>
-              <td>{v.visit_date}</td>
-              <td><Link to={`/visits/${v.id}`}>{v.customer_name}</Link></td>
-              <td>{v.address}</td>
-              <td>{v.city}</td>
-              <td>{v.surveyor_name}</td>
-              <td>{v.email_sent ? "Sent" : "Failed"}</td>
-            </tr>
-          ))}
-          {!loading && visits.length === 0 && (
-            <tr>
-              <td colSpan={6} className="empty-row">No measurements found.</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+      {!loading && !error && visits.length === 0 && (
+        <div className="empty-state">
+          <div className="big">No measurements yet</div>
+          <p>Click "New measurement" after visiting a customer to record the first measurements.</p>
+          <Link to="/visits/new" className="primary-button">+ New measurement</Link>
+        </div>
+      )}
+
+      <div className="cards">
+        {visits.map((v) => (
+          <Link to={`/visits/${v.id}`} key={v.id} className="visit-card">
+            <div className="ruler small" />
+            <div className="visit-card-body">
+              <div>
+                <div className="visit-card-name">{v.customer_name}</div>
+                <div className="visit-card-addr">{v.address}, {v.city}</div>
+                <div className="visit-card-chips">
+                  <span className={`chip ${v.email_sent ? "chip-sent" : "chip-failed"}`}>
+                    {v.email_sent ? "Email sent" : "Email failed"}
+                  </span>
+                </div>
+              </div>
+              <div className="visit-card-meta">
+                {v.visit_date}<br />{v.surveyor_name}
+              </div>
+            </div>
+          </Link>
+        ))}
+      </div>
     </div>
   );
 }

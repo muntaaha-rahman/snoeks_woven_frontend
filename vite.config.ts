@@ -13,8 +13,8 @@ export default defineConfig({
         name: 'Snoeks Wonen Measurements',
         short_name: 'Snoeks Meten',
         description: 'On-site measurement app for window treatments, flooring, insect screens and sun shading',
-        theme_color: '#1c3d5a',
-        background_color: '#f5f6f8',
+        theme_color: '#93173d',
+        background_color: '#f7f4ef',
         display: 'standalone',
         start_url: '/',
         icons: [

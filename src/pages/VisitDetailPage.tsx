@@ -43,11 +43,11 @@ export function VisitDetailPage() {
 
   return (
     <div className="page">
-      <div className="page-header">
+      <div className="page-header" style={{ marginTop: 24 }}>
         <h1>{visit.customer_name}</h1>
         <div className="page-actions">
-          <Link to={`/visits/${visit.id}/edit`}>Edit</Link>
-          <a href={pdfUrl(visit.id)} target="_blank" rel="noreferrer">View PDF</a>
+          <Link to={`/visits/${visit.id}/edit`} className="ghost-button">Edit</Link>
+          <a href={pdfUrl(visit.id)} target="_blank" rel="noreferrer" className="ghost-button">View PDF</a>
           <button type="button" onClick={handleDelete} className="remove-button">Delete</button>
         </div>
       </div>

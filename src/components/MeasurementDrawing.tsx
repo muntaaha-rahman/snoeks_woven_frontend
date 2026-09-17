@@ -6,7 +6,7 @@ interface Props {
 }
 
 /** A live scaled drawing that redraws as the surveyor types in dimensions. */
-export function MeasurementDrawing({ width, height, unit = "mm", maxSize = 160 }: Props) {
+export function MeasurementDrawing({ width, height, unit = "mm", maxSize = 110 }: Props) {
   if (!width || !height || width <= 0 || height <= 0) {
     return (
       <div className="drawing-placeholder">
