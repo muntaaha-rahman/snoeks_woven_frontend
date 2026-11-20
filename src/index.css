@@ -402,3 +402,21 @@ button.remove-button:hover { background: var(--danger-soft); }
 .summary-item { font-size: 13.5px; padding: 6px 0; border-bottom: 1px dashed var(--border); }
 
 .error-text { color: var(--danger); }
+
+/* Language switcher */
+.lang-switch {
+  display: inline-flex;
+  border: 1px solid var(--primary);
+  border-radius: 6px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.lang-switch button {
+  background: transparent;
+  color: var(--primary);
+  border: 0;
+  padding: 6px 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.lang-switch button.active { background: var(--primary); color: #fff; }

@@ -10,6 +10,7 @@ import { FlooringSectionForm } from "./FlooringSectionForm";
 import { InsectScreenForm } from "./InsectScreenForm";
 import { SunShadingForm } from "./SunShadingForm";
 import { WindowTreatmentForm } from "./WindowTreatmentForm";
+import { useI18n } from "../i18n/I18nContext";
 
 interface Props {
   room: Room;
@@ -26,21 +27,22 @@ function removeAt<T>(arr: T[], index: number): T[] {
 }
 
 export function RoomEditor({ room, onChange, onRemove }: Props) {
+  const { t } = useI18n();
   return (
     <section className="room-editor">
       <div className="room-editor-header">
         <input
           value={room.name}
-          placeholder="Room name (e.g. Living room)"
+          placeholder={t("room.namePlaceholder")}
           onChange={(e: ChangeEvent<HTMLInputElement>) => onChange({ ...room, name: e.target.value })}
         />
-        <button type="button" className="text-link-button" onClick={onRemove}>Remove room</button>
+        <button type="button" className="text-link-button" onClick={onRemove}>{t("room.remove")}</button>
       </div>
 
       <div className="room-editor-body">
         <div className="category-section">
           <div className="category-header">
-            <span>Window treatments</span>
+            <span>{t("cat.window")}</span>
             <span className="rule" />
           </div>
           {room.window_treatments.map((item, i) => (
@@ -58,13 +60,13 @@ export function RoomEditor({ room, onChange, onRemove }: Props) {
               onChange({ ...room, window_treatments: [...room.window_treatments, emptyWindowTreatment()] })
             }
           >
-            + Add window treatment
+            {t("add.window")}
           </button>
         </div>
 
         <div className="category-section">
           <div className="category-header">
-            <span>Flooring</span>
+            <span>{t("cat.flooring")}</span>
             <span className="rule" />
           </div>
           {room.flooring_sections.map((item, i) => (
@@ -80,13 +82,13 @@ export function RoomEditor({ room, onChange, onRemove }: Props) {
             className="add-item-button"
             onClick={() => onChange({ ...room, flooring_sections: [...room.flooring_sections, emptyFlooringSection()] })}
           >
-            + Add flooring section
+            {t("add.flooring")}
           </button>
         </div>
 
         <div className="category-section">
           <div className="category-header">
-            <span>Insect screens</span>
+            <span>{t("cat.insect")}</span>
             <span className="rule" />
           </div>
           {room.insect_screens.map((item, i) => (
@@ -102,13 +104,13 @@ export function RoomEditor({ room, onChange, onRemove }: Props) {
             className="add-item-button"
             onClick={() => onChange({ ...room, insect_screens: [...room.insect_screens, emptyInsectScreen()] })}
           >
-            + Add insect screen
+            {t("add.insect")}
           </button>
         </div>
 
         <div className="category-section">
           <div className="category-header">
-            <span>Sun shading</span>
+            <span>{t("cat.sun")}</span>
             <span className="rule" />
           </div>
           {room.sun_shadings.map((item, i) => (
@@ -124,7 +126,7 @@ export function RoomEditor({ room, onChange, onRemove }: Props) {
             className="add-item-button"
             onClick={() => onChange({ ...room, sun_shadings: [...room.sun_shadings, emptySunShading()] })}
           >
-            + Add sun shading
+            {t("add.sun")}
           </button>
         </div>
       </div>

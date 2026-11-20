@@ -2,6 +2,7 @@ import type { WindowTreatment } from "../api/types";
 import { MeasurementDrawing } from "./MeasurementDrawing";
 import { PhotoPicker } from "./PhotoPicker";
 import { NoteField, NumberField, OptionalNumberField, SelectField, TextField } from "./fields";
+import { useI18n } from "../i18n/I18nContext";
 
 interface Props {
   item: WindowTreatment;
@@ -10,72 +11,73 @@ interface Props {
 }
 
 export function WindowTreatmentForm({ item, onChange, onRemove }: Props) {
+  const { t } = useI18n();
   const set = <K extends keyof WindowTreatment>(key: K, value: WindowTreatment[K]) =>
     onChange({ ...item, [key]: value });
 
   return (
     <div className="item-card">
       <div className="item-card-header">
-        <h4>Window treatment</h4>
-        <button type="button" className="remove-button" onClick={onRemove}>Remove</button>
+        <h4>{t("item.window")}</h4>
+        <button type="button" className="remove-button" onClick={onRemove}>{t("common.remove")}</button>
       </div>
       <div className="item-card-body">
         <div className="item-fields">
-          <NumberField label="Width (mm)" value={item.width_mm} onChange={(v) => set("width_mm", v)} />
-          <NumberField label="Height (mm)" value={item.height_mm} onChange={(v) => set("height_mm", v)} />
+          <NumberField label={t("f.widthMm")} value={item.width_mm} onChange={(v) => set("width_mm", v)} />
+          <NumberField label={t("f.heightMm")} value={item.height_mm} onChange={(v) => set("height_mm", v)} />
           <SelectField
-            label="Product"
+            label={t("f.product")}
             value={item.product}
             onChange={(v) => set("product", v as WindowTreatment["product"])}
             options={[
-              { value: "curtain", label: "Curtain" },
-              { value: "roller_blind", label: "Roller blind" },
-              { value: "pleated_blind", label: "Pleated blind" },
-              { value: "venetian_blind", label: "Venetian blind" },
+              { value: "curtain", label: t("o.curtain") },
+              { value: "roller_blind", label: t("o.roller_blind") },
+              { value: "pleated_blind", label: t("o.pleated_blind") },
+              { value: "venetian_blind", label: t("o.venetian_blind") },
             ]}
           />
-          <TextField label="Fabric / colour (sample no.)" value={item.fabric_colour_sample} onChange={(v) => set("fabric_colour_sample", v)} />
-          <OptionalNumberField label="Frame reveal depth (mm)" value={item.frame_reveal_depth_mm} onChange={(v) => set("frame_reveal_depth_mm", v)} />
+          <TextField label={t("f.fabricColour")} value={item.fabric_colour_sample} onChange={(v) => set("fabric_colour_sample", v)} />
+          <OptionalNumberField label={t("f.reveal")} value={item.frame_reveal_depth_mm} onChange={(v) => set("frame_reveal_depth_mm", v)} />
           <SelectField
-            label="Operating side"
+            label={t("f.operatingSide")}
             value={item.operating_side}
             onChange={(v) => set("operating_side", v as WindowTreatment["operating_side"])}
-            options={[{ value: "left", label: "Left" }, { value: "right", label: "Right" }]}
+            options={[{ value: "left", label: t("o.left") }, { value: "right", label: t("o.right") }]}
           />
           <SelectField
-            label="Operating type"
+            label={t("f.operatingType")}
             value={item.operating_type}
             onChange={(v) => set("operating_type", v as WindowTreatment["operating_type"])}
             options={[
-              { value: "chain", label: "Chain" },
-              { value: "cordless", label: "Cordless" },
-              { value: "handle", label: "Handle" },
-              { value: "motorised", label: "Motorised" },
+              { value: "chain", label: t("o.chain") },
+              { value: "cordless", label: t("o.cordless") },
+              { value: "handle", label: t("o.handle") },
+              { value: "motorised", label: t("o.motorised") },
             ]}
           />
-          <TextField label="Profile colour" value={item.profile_colour} onChange={(v) => set("profile_colour", v)} />
+          <TextField label={t("f.profileColour")} value={item.profile_colour} onChange={(v) => set("profile_colour", v)} />
           <SelectField
-            label="Window opening direction"
+            label={t("f.windowOpening")}
             value={item.window_opening_direction}
             onChange={(v) => set("window_opening_direction", v as WindowTreatment["window_opening_direction"])}
             options={[
-              { value: "fixed", label: "Fixed" },
-              { value: "tilt_and_turn", label: "Tilt-and-turn" },
-              { value: "inward", label: "Inward" },
-              { value: "outward", label: "Outward" },
+              { value: "fixed", label: t("o.fixed") },
+              { value: "tilt_and_turn", label: t("o.tilt_and_turn") },
+              { value: "inward", label: t("o.inward") },
+              { value: "outward", label: t("o.outward") },
             ]}
           />
           <SelectField
-            label="Mounting"
+            label={t("f.mounting")}
             value={item.mounting}
             onChange={(v) => set("mounting", v as WindowTreatment["mounting"])}
             options={[
-              { value: "wall", label: "Wall" },
-              { value: "ceiling", label: "Ceiling" },
-              { value: "recess", label: "Recess" },
+              { value: "wall", label: t("o.wall") },
+              { value: "ceiling", label: t("o.ceiling") },
+              { value: "recess", label: t("o.recess") },
             ]}
           />
-          <NoteField label="Note" value={item.note} onChange={(v) => set("note", v)} />
+          <NoteField label={t("common.note")} value={item.note} onChange={(v) => set("note", v)} />
         </div>
         <div className="item-side">
           <MeasurementDrawing width={item.width_mm} height={item.height_mm} />

@@ -2,6 +2,19 @@ import type { Visit, VisitInput, VisitListItem } from "./types";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8000";
 
+function currentLang(): string {
+  try {
+    return localStorage.getItem("snoeks-lang") === "nl" ? "nl" : "en";
+  } catch {
+    return "en";
+  }
+}
+
+/** Append the UI language so the backend renders the PDF/email in it. */
+function withLang(path: string): string {
+  return `${path}${path.includes("?") ? "&" : "?"}lang=${currentLang()}`;
+}
+
 export class ApiError extends Error {
   status: number;
   constructor(status: number, message: string) {
@@ -16,7 +29,7 @@ export class NetworkError extends Error {}
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   let response: Response;
   try {
-    response = await fetch(`${API_BASE}${path}`, {
+    response = await fetch(`${API_BASE}${withLang(path)}`, {
       ...options,
       headers: { "Content-Type": "application/json", ...options.headers },
     });
@@ -72,7 +85,7 @@ export function resendEmail(id: string): Promise<Visit> {
 }
 
 export function pdfUrl(id: string): string {
-  return `${API_BASE}/visits/${id}/pdf`;
+  return `${API_BASE}${withLang(`/visits/${id}/pdf`)}`;
 }
 
 export function uploadUrl(): string {

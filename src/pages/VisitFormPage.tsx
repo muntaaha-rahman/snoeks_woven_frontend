@@ -6,8 +6,10 @@ import type { VisitInput } from "../api/types";
 import { RoomEditor } from "../components/RoomEditor";
 import { TextField } from "../components/fields";
 import { queueVisit } from "../offline/queue";
+import { useI18n } from "../i18n/I18nContext";
 
 export function VisitFormPage() {
+  const { t } = useI18n();
   const { visitId } = useParams();
   const isEdit = Boolean(visitId);
   const navigate = useNavigate();
@@ -21,7 +23,7 @@ export function VisitFormPage() {
     if (!visitId) return;
     getVisit(visitId)
       .then(setVisit)
-      .catch(() => setError("Could not load this measurement."))
+      .catch(() => setError(t("detail.loadError")))
       .finally(() => setLoading(false));
   }, [visitId]);
 
@@ -38,7 +40,7 @@ export function VisitFormPage() {
   }
 
   function addRoom() {
-    setVisit((v) => ({ ...v, rooms: [...v.rooms, emptyRoom(`Room ${v.rooms.length + 1}`)] }));
+    setVisit((v) => ({ ...v, rooms: [...v.rooms, emptyRoom(t("form.roomDefault", { n: v.rooms.length + 1 }))] }));
   }
 
   async function handleSubmit() {
@@ -58,35 +60,35 @@ export function VisitFormPage() {
         navigate("/", { state: { queued: true } });
         return;
       }
-      setError(err instanceof Error ? err.message : "Failed to save this measurement.");
+      setError(err instanceof Error ? err.message : t("form.saveError"));
     } finally {
       setSaving(false);
     }
   }
 
-  if (loading) return <div className="page">Loading...</div>;
+  if (loading) return <div className="page">{t("common.loading")}</div>;
 
   return (
     <div className="page">
-      <h1 style={{ marginTop: 24 }}>{isEdit ? "Edit measurement" : "New measurement"}</h1>
+      <h1 style={{ marginTop: 24 }}>{isEdit ? t("form.editTitle") : t("form.newTitle")}</h1>
 
       <div className="section">
         <div className="ruler small" />
         <div className="section-inner">
-          <h2 className="section-title">Customer details</h2>
+          <h2 className="section-title">{t("form.customerDetails")}</h2>
           <div className="customer-form">
-            <TextField label="Customer name" value={visit.customer_name} onChange={(v) => set("customer_name", v)} />
-            <TextField label="Address" value={visit.address} onChange={(v) => set("address", v)} />
-            <TextField label="Postal code" value={visit.postal_code} onChange={(v) => set("postal_code", v)} />
-            <TextField label="City" value={visit.city} onChange={(v) => set("city", v)} />
-            <TextField label="Phone" value={visit.phone} onChange={(v) => set("phone", v)} />
-            <TextField label="Email" value={visit.email} onChange={(v) => set("email", v)} />
+            <TextField label={t("form.customerName")} value={visit.customer_name} onChange={(v) => set("customer_name", v)} />
+            <TextField label={t("form.address")} value={visit.address} onChange={(v) => set("address", v)} />
+            <TextField label={t("form.postalCode")} value={visit.postal_code} onChange={(v) => set("postal_code", v)} />
+            <TextField label={t("form.city")} value={visit.city} onChange={(v) => set("city", v)} />
+            <TextField label={t("form.phone")} value={visit.phone} onChange={(v) => set("phone", v)} />
+            <TextField label={t("form.email")} value={visit.email} onChange={(v) => set("email", v)} />
             <label className="field">
-              <span>Date</span>
+              <span>{t("form.date")}</span>
               <input type="date" value={visit.visit_date} onChange={(e) => set("visit_date", e.target.value)} />
             </label>
-            <TextField label="Surveyor" value={visit.surveyor_name} onChange={(v) => set("surveyor_name", v)} />
-            <TextField label="Property notes" value={visit.property_notes} onChange={(v) => set("property_notes", v)} />
+            <TextField label={t("form.surveyor")} value={visit.surveyor_name} onChange={(v) => set("surveyor_name", v)} />
+            <TextField label={t("form.propertyNotes")} value={visit.property_notes} onChange={(v) => set("property_notes", v)} />
           </div>
         </div>
       </div>
@@ -95,12 +97,12 @@ export function VisitFormPage() {
         <div className="ruler small" />
         <div className="section-inner">
           <h2 className="section-title">
-            Rooms
-            <button type="button" className="ghost-button" onClick={addRoom}>+ Add room</button>
+            {t("form.rooms")}
+            <button type="button" className="ghost-button" onClick={addRoom}>{t("form.addRoom")}</button>
           </h2>
           {visit.rooms.length === 0 && (
             <p style={{ color: "var(--text-muted)", fontSize: 14 }}>
-              No rooms added yet. Click "+ Add room" above to begin, e.g. "Living room" or "Bedroom 1".
+              {t("form.noRooms")}
             </p>
           )}
           {visit.rooms.map((room, i) => (
@@ -113,10 +115,10 @@ export function VisitFormPage() {
 
       <div className="form-actions">
         <button type="button" className="ghost-button" onClick={() => navigate(-1)} disabled={saving}>
-          Cancel
+          {t("common.cancel")}
         </button>
         <button type="button" className="primary-button" onClick={handleSubmit} disabled={saving}>
-          {saving ? "Saving..." : "Save, generate PDF & send email"}
+          {saving ? t("form.saving") : t("form.save")}
         </button>
       </div>
     </div>

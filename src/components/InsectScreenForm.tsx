@@ -2,6 +2,7 @@ import type { InsectScreen } from "../api/types";
 import { MeasurementDrawing } from "./MeasurementDrawing";
 import { PhotoPicker } from "./PhotoPicker";
 import { NoteField, NumberField, OptionalNumberField, SelectField, TextField } from "./fields";
+import { useI18n } from "../i18n/I18nContext";
 
 interface Props {
   item: InsectScreen;
@@ -10,51 +11,52 @@ interface Props {
 }
 
 export function InsectScreenForm({ item, onChange, onRemove }: Props) {
+  const { t } = useI18n();
   const set = <K extends keyof InsectScreen>(key: K, value: InsectScreen[K]) =>
     onChange({ ...item, [key]: value });
 
   return (
     <div className="item-card">
       <div className="item-card-header">
-        <h4>Insect screen</h4>
-        <button type="button" className="remove-button" onClick={onRemove}>Remove</button>
+        <h4>{t("item.insect")}</h4>
+        <button type="button" className="remove-button" onClick={onRemove}>{t("common.remove")}</button>
       </div>
       <div className="item-card-body">
         <div className="item-fields">
-          <NumberField label="Width (mm)" value={item.width_mm} onChange={(v) => set("width_mm", v)} />
-          <NumberField label="Height (mm)" value={item.height_mm} onChange={(v) => set("height_mm", v)} />
+          <NumberField label={t("f.widthMm")} value={item.width_mm} onChange={(v) => set("width_mm", v)} />
+          <NumberField label={t("f.heightMm")} value={item.height_mm} onChange={(v) => set("height_mm", v)} />
           <SelectField
-            label="Mount type (op de dag / in de dag)"
+            label={t("f.mountType")}
             value={item.mount_type}
             onChange={(v) => set("mount_type", v as InsectScreen["mount_type"])}
             options={[
-              { value: "surface", label: "Surface-mounted (op de dag)" },
-              { value: "recess", label: "Recess-mounted (in de dag)" },
+              { value: "surface", label: t("o.surface") },
+              { value: "recess", label: t("o.recess_mount") },
             ]}
           />
           <SelectField
-            label="Window/door type"
+            label={t("f.windowDoorType")}
             value={item.window_door_type}
             onChange={(v) => set("window_door_type", v as InsectScreen["window_door_type"])}
             options={[
-              { value: "turn_window", label: "Turn window" },
-              { value: "sliding_window", label: "Sliding window" },
-              { value: "door", label: "Door" },
-              { value: "roof_window", label: "Roof window" },
+              { value: "turn_window", label: t("o.turn_window") },
+              { value: "sliding_window", label: t("o.sliding_window") },
+              { value: "door", label: t("o.door") },
+              { value: "roof_window", label: t("o.roof_window") },
             ]}
           />
-          <TextField label="Opening direction" value={item.opening_direction} onChange={(v) => set("opening_direction", v)} />
-          <OptionalNumberField label="Frame reveal depth (mm)" value={item.frame_reveal_depth_mm} onChange={(v) => set("frame_reveal_depth_mm", v)} />
-          <TextField label="Profile colour" value={item.profile_colour} onChange={(v) => set("profile_colour", v)} />
-          <TextField label="Screen mesh (sample no.)" value={item.mesh_sample} onChange={(v) => set("mesh_sample", v)} />
+          <TextField label={t("f.openingDirection")} value={item.opening_direction} onChange={(v) => set("opening_direction", v)} />
+          <OptionalNumberField label={t("f.reveal")} value={item.frame_reveal_depth_mm} onChange={(v) => set("frame_reveal_depth_mm", v)} />
+          <TextField label={t("f.profileColour")} value={item.profile_colour} onChange={(v) => set("profile_colour", v)} />
+          <TextField label={t("f.mesh")} value={item.mesh_sample} onChange={(v) => set("mesh_sample", v)} />
           <SelectField
-            label="Operating side"
+            label={t("f.operatingSide")}
             value={item.operating_side}
             onChange={(v) => set("operating_side", v as InsectScreen["operating_side"])}
-            options={[{ value: "left", label: "Left" }, { value: "right", label: "Right" }]}
+            options={[{ value: "left", label: t("o.left") }, { value: "right", label: t("o.right") }]}
           />
-          <TextField label="Mounting surface" value={item.mounting_surface} onChange={(v) => set("mounting_surface", v)} />
-          <NoteField label="Note" value={item.note} onChange={(v) => set("note", v)} />
+          <TextField label={t("f.mountingSurface")} value={item.mounting_surface} onChange={(v) => set("mounting_surface", v)} />
+          <NoteField label={t("common.note")} value={item.note} onChange={(v) => set("note", v)} />
         </div>
         <div className="item-side">
           <MeasurementDrawing width={item.width_mm} height={item.height_mm} />

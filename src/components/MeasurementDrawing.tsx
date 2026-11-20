@@ -1,3 +1,5 @@
+import { useI18n } from "../i18n/I18nContext";
+
 interface Props {
   width: number;
   height: number;
@@ -7,10 +9,11 @@ interface Props {
 
 /** A live scaled drawing that redraws as the surveyor types in dimensions. */
 export function MeasurementDrawing({ width, height, unit = "mm", maxSize = 110 }: Props) {
+  const { t } = useI18n();
   if (!width || !height || width <= 0 || height <= 0) {
     return (
       <div className="drawing-placeholder">
-        Enter width &amp; height to preview
+        {t("drawing.placeholder")}
       </div>
     );
   }
@@ -28,7 +31,7 @@ export function MeasurementDrawing({ width, height, unit = "mm", maxSize = 110 }
       height={svgH}
       viewBox={`0 0 ${svgW} ${svgH}`}
       role="img"
-      aria-label={`Scaled drawing, ${width}${unit} by ${height}${unit}`}
+      aria-label={t("drawing.aria", { w: width, h: height, u: unit })}
     >
       <rect
         x={pad}

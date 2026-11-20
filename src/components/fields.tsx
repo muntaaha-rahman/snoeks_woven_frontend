@@ -1,4 +1,5 @@
 import type { ChangeEvent } from "react";
+import { useI18n } from "../i18n/I18nContext";
 
 interface FieldProps<T> {
   label: string;
@@ -54,11 +55,12 @@ export function SelectField({
   onChange,
   options,
 }: FieldProps<string> & { options: { value: string; label: string }[] }) {
+  const { t } = useI18n();
   return (
     <label className="field">
       <span>{label}</span>
       <select value={value} onChange={(e: ChangeEvent<HTMLSelectElement>) => onChange(e.target.value)}>
-        <option value="">Select...</option>
+        <option value="">{t("common.select")}</option>
         {options.map((opt) => (
           <option key={opt.value} value={opt.value}>
             {opt.label}

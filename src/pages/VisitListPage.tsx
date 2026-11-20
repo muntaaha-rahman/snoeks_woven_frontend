@@ -5,8 +5,10 @@ import type { VisitListItem } from "../api/types";
 import { flushQueue } from "../offline/queue";
 import { useOnlineStatus } from "../offline/useOnlineStatus";
 import { useQueuedCount } from "../offline/useQueuedCount";
+import { useI18n } from "../i18n/I18nContext";
 
 export function VisitListPage() {
+  const { t } = useI18n();
   const [visits, setVisits] = useState<VisitListItem[]>([]);
   const [filters, setFilters] = useState<VisitFilters>({});
   const [loading, setLoading] = useState(false);
@@ -20,7 +22,7 @@ export function VisitListPage() {
     try {
       setVisits(await listVisits(filters));
     } catch {
-      setError("Could not load measurements. You may be offline.");
+      setError(t("list.loadError"));
     } finally {
       setLoading(false);
     }
@@ -35,13 +37,13 @@ export function VisitListPage() {
     <div className="page">
       {!online && (
         <div className="banner banner-warning">
-          You're offline. New measurements will be saved on this device and sent once you're back online.
+          {t("list.offline")}
         </div>
       )}
       {online && queuedCount > 0 && (
         <div className="banner banner-info">
-          {queuedCount} measurement{queuedCount > 1 ? "s" : ""} waiting to sync.
-          <button type="button" onClick={() => flushQueue()}>Sync now</button>
+          {queuedCount === 1 ? t("list.queued.one") : t("list.queued.many", { n: queuedCount })}
+          <button type="button" onClick={() => flushQueue()}>{t("list.syncNow")}</button>
         </div>
       )}
 
@@ -53,18 +55,18 @@ export function VisitListPage() {
         }}
       >
         <input
-          placeholder="Search customer, address, city..."
+          placeholder={t("list.search")}
           value={filters.search ?? ""}
           onChange={(e) => setFilters({ ...filters, search: e.target.value })}
           style={{ flex: 2, minWidth: 220 }}
         />
         <input
-          placeholder="City"
+          placeholder={t("list.city")}
           value={filters.city ?? ""}
           onChange={(e) => setFilters({ ...filters, city: e.target.value })}
         />
         <input
-          placeholder="Surveyor"
+          placeholder={t("list.surveyor")}
           value={filters.surveyor_name ?? ""}
           onChange={(e) => setFilters({ ...filters, surveyor_name: e.target.value })}
         />
@@ -78,20 +80,20 @@ export function VisitListPage() {
           value={filters.date_to ?? ""}
           onChange={(e) => setFilters({ ...filters, date_to: e.target.value })}
         />
-        <button type="submit">Filter</button>
-        <Link to="/visits/new" className="primary-button">+ New measurement</Link>
+        <button type="submit">{t("list.filter")}</button>
+        <Link to="/visits/new" className="primary-button">{t("list.newBtn")}</Link>
       </form>
 
-      <p className="datateam">This overview is shared with the whole Snoeks Wonen team.</p>
+      <p className="datateam">{t("list.shared")}</p>
 
-      {loading && <p>Loading...</p>}
+      {loading && <p>{t("common.loading")}</p>}
       {error && <p className="error-text">{error}</p>}
 
       {!loading && !error && visits.length === 0 && (
         <div className="empty-state">
-          <div className="big">No measurements yet</div>
-          <p>Click "New measurement" after visiting a customer to record the first measurements.</p>
-          <Link to="/visits/new" className="primary-button">+ New measurement</Link>
+          <div className="big">{t("list.emptyTitle")}</div>
+          <p>{t("list.emptyText")}</p>
+          <Link to="/visits/new" className="primary-button">{t("list.newBtn")}</Link>
         </div>
       )}
 
@@ -105,7 +107,7 @@ export function VisitListPage() {
                 <div className="visit-card-addr">{v.address}, {v.city}</div>
                 <div className="visit-card-chips">
                   <span className={`chip ${v.email_sent ? "chip-sent" : "chip-failed"}`}>
-                    {v.email_sent ? "Email sent" : "Email failed"}
+                    {v.email_sent ? t("list.emailSent") : t("list.emailFailed")}
                   </span>
                 </div>
               </div>
